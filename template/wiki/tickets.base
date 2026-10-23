@@ -1,0 +1,23 @@
+filters:
+  and:
+    - file.inFolder("tickets")
+    - type == "plan"
+views:
+  - type: table
+    name: Tickets
+    order:
+      - ticket
+      - title
+      - status
+      - updated
+      - features
+  - type: table
+    name: Open
+    filters:
+      and:
+        - status != "done"
+    order:
+      - ticket
+      - title
+      - status
+      - updated

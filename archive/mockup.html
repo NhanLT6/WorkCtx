@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Context — Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #0f1520;
+    --surface2: #141c2b;
+    --border: #1a2438;
+    --border2: #222f45;
+    --accent: #00d9a3;
+    --accent2: #4a9eff;
+    --accent3: #f5a623;
+    --text: #c8d4e8;
+    --text2: #6b7d99;
+    --text3: #3d4f6b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+    --active: rgba(0,217,163,0.08);
+    --active-border: rgba(0,217,163,0.2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 12px;
+  }
+
+  /* ── TOPBAR ─────────────────────────────────────────────── */
+  .topbar {
+    height: 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 16px; flex-shrink: 0;
+  }
+  .logo {
+    font-family: var(--sans); font-size: 14px; font-weight: 800;
+    color: var(--accent); letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-dot {
+    width: 6px; height: 6px; background: var(--accent);
+    border-radius: 50%; box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .topbar-ticket {
+    display: flex; align-items: center; gap: 10px;
+    margin-left: 8px; padding-left: 16px;
+    border-left: 1px solid var(--border2);
+  }
+  .ticket-id    { font-size:11px; font-weight:700; color:var(--accent); letter-spacing:.06em; }
+  .ticket-label { font-size:11px; color:var(--text2); }
+
+  .badge { padding:2px 8px; border-radius:3px; font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+  .badge-active { background:rgba(0,217,163,.1); color:var(--accent); border:1px solid rgba(0,217,163,.25); }
+  .badge-paused { background:rgba(245,166,35,.1); color:var(--accent3); border:1px solid rgba(245,166,35,.25); }
+  .badge-done   { background:rgba(107,125,153,.1); color:var(--text2); border:1px solid var(--border2); }
+
+  .topbar-actions { margin-left:auto; display:flex; align-items:center; gap:8px; }
+
+  .btn {
+    padding:6px 14px; border-radius:4px; font-size:10px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase;
+    cursor:pointer; font-family:var(--mono); border:none; transition:all .15s;
+  }
+  .btn-park        { background:rgba(245,166,35,.12); color:var(--accent3); border:1px solid rgba(245,166,35,.3); }
+  .btn-reconstruct { background:rgba(74,158,255,.12);  color:var(--accent2); border:1px solid rgba(74,158,255,.3); }
+  .btn-primary     { background:var(--accent); color:var(--bg); }
+  .btn-ghost       { background:transparent; color:var(--text2); border:1px solid var(--border2); }
+
+  /* ── MAIN ────────────────────────────────────────────────── */
+  .main { display:grid; grid-template-columns:220px 1fr; flex:1; overflow:hidden; }
+
+  /* ── SIDEBAR ─────────────────────────────────────────────── */
+  .sidebar {
+    background:var(--surface); border-right:1px solid var(--border);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .sidebar-header {
+    padding:14px 16px 10px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .sidebar-title { font-size:9px; font-weight:700; color:var(--text3); letter-spacing:.12em; text-transform:uppercase; }
+  .filter-bar { display:flex; gap:4px; padding:10px 12px; border-bottom:1px solid var(--border); }
+  .filter-btn {
+    padding:3px 8px; border-radius:3px; font-size:9px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase;
+    cursor:pointer; background:transparent; color:var(--text3); border:none; font-family:var(--mono);
+  }
+  .filter-btn.on { background:var(--active); color:var(--accent); }
+  .ticket-list { flex:1; overflow-y:auto; padding:8px; }
+  .ticket-card {
+    padding:10px 12px; border-radius:5px; margin-bottom:4px;
+    cursor:pointer; border:1px solid transparent; transition:all .15s; position:relative;
+  }
+  .ticket-card.on  { background:var(--active); border-color:var(--active-border); }
+  .ticket-card:not(.on):hover { background:var(--surface2); }
+  .tc-accent { position:absolute; left:0; top:4px; bottom:4px; width:2px; border-radius:2px; }
+  .tc-head   { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+  .tc-id     { font-size:11px; font-weight:700; color:var(--accent); }
+  .tc-label  { font-size:10px; color:var(--text2); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tc-meta   { font-size:9px; color:var(--text3); }
+
+  /* ── WORKSPACE ───────────────────────────────────────────── */
+  /* 300px assets panel | rest = context */
+  .workspace { display:grid; grid-template-columns:300px 1fr; overflow:hidden; }
+
+  .panel { border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+  .panel:last-child { border-right:none; }
+
+  .panel-header {
+    padding:11px 14px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+  }
+  .panel-title { font-size:9px; font-weight:700; color:var(--text3); letter-spacing:.12em; text-transform:uppercase; }
+  .panel-body  { flex:1; overflow-y:auto; padding:10px; }
+
+  /* ── ASSET ROW ───────────────────────────────────────────── */
+  /*
+    Files:  file-type emoji icon  | name (brighter)  | optional ver badge
+    Links:  ↗ text icon           | name (dimmer)     | (nothing)
+
+    No divider — ordering does the grouping.
+  */
+  .asset-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 9px; border-radius: 4px; margin-bottom: 3px;
+    cursor: pointer; border: 1px solid transparent; transition: background .12s;
+  }
+  .asset-row:hover { background: var(--surface2); }
+  .asset-row.on    { background: var(--active); border-color: var(--active-border); }
+
+  /* dimmed system files (context.md, AGENT.md) */
+  .asset-row.sys { opacity: .5; }
+  .asset-row.sys:hover { opacity: .75; }
+
+  .a-icon {
+    width: 20px; text-align: center; flex-shrink: 0; font-size: 13px; line-height: 1;
+  }
+  /* link arrow is a monospace character, slightly smaller & dimmer */
+  .a-icon.arr { font-size: 11px; color: var(--text3); }
+
+  .a-name {
+    flex: 1; min-width: 0;
+    font-size: 11px; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* link labels slightly dimmer — the one visual cue besides the icon */
+  .asset-row.lnk .a-name { color: var(--text2); }
+  .asset-row.lnk:hover .a-name { color: var(--text); }
+
+  .a-right { display:flex; align-items:center; flex-shrink:0; }
+
+  .ver-badge {
+    font-size: 9px; color: var(--text3);
+    background: var(--surface2); padding: 1px 5px;
+    border-radius: 2px; border: 1px solid var(--border2);
+  }
+
+  /* ── DROPZONE ────────────────────────────────────────────── */
+  .dropzone {
+    border:1px dashed var(--border2); border-radius:5px;
+    padding:12px; text-align:center; color:var(--text3);
+    font-size:10px; margin-top:6px; cursor:pointer; transition:all .15s; line-height:1.7;
+  }
+  .dropzone:hover { border-color:rgba(0,217,163,.3); color:var(--accent); background:var(--active); }
+
+  /* ── ADD DROPDOWN ────────────────────────────────────────── */
+  .add-wrap { position:relative; }
+  .add-btn {
+    display:flex; align-items:center; gap:4px;
+    padding:4px 10px; border-radius:3px;
+    font-size:10px; font-weight:700; letter-spacing:.06em;
+    cursor:pointer; font-family:var(--mono);
+    background:transparent; color:var(--text2);
+    border:1px solid var(--border2); transition:all .13s;
+  }
+  .add-btn:hover, .add-btn.on { color:var(--accent); border-color:var(--active-border); background:var(--active); }
+  .chevron { font-size:8px; display:inline-block; transition:transform .15s; }
+  .add-btn.on .chevron { transform:rotate(180deg); }
+
+  .add-dd {
+    position:absolute; top:calc(100% + 4px); right:0;
+    background:var(--surface2); border:1px solid var(--border2);
+    border-radius:5px; overflow:hidden; z-index:50; min-width:164px;
+    box-shadow:0 8px 24px rgba(0,0,0,.6);
+    opacity:0; transform:translateY(-4px) scale(.98);
+    pointer-events:none; transition:all .15s;
+  }
+  .add-dd.on { opacity:1; transform:translateY(0) scale(1); pointer-events:all; }
+
+  .dd-row {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; font-size:11px; color:var(--text2);
+    cursor:pointer; transition:background .12s;
+  }
+  .dd-row:hover { background:var(--active); color:var(--accent); }
+  .dd-ic  { font-size:13px; width:16px; text-align:center; }
+  .dd-sub { font-size:9px; color:var(--text3); display:block; margin-top:1px; }
+
+  /* ── CONTEXT PANEL ───────────────────────────────────────── */
+  .tab-bar { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .tab {
+    padding:10px 16px; font-size:10px; font-weight:600;
+    color:var(--text3); cursor:pointer; letter-spacing:.06em;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+    font-family:var(--mono); background:none;
+    border-top:none; border-left:none; border-right:none; transition:all .13s;
+  }
+  .tab.on { color:var(--accent); border-bottom-color:var(--accent); }
+
+  .ctx-body   { flex:1; overflow-y:auto; padding:20px 24px; }
+  .ctx-ts {
+    font-size:9px; color:var(--text3); letter-spacing:.06em;
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .ctx-ts::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+
+  .ctx-sec     { margin-bottom:20px; }
+  .ctx-lbl     { font-size:9px; font-weight:700; color:var(--text3); letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px; }
+  .ctx-box     { font-size:12px; color:var(--text); line-height:1.7; padding:10px 14px; background:var(--surface2); border-radius:4px; border-left:2px solid var(--border2); }
+  .ctx-box.hi  { border-left-color:var(--accent); background:var(--active); }
+  .ctx-box.war { border-left-color:var(--accent3); background:rgba(245,166,35,.05); }
+
+  .ctx-footer {
+    padding:10px 24px; border-top:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+  }
+  .hist-link {
+    font-size:10px; color:var(--text3); cursor:pointer;
+    text-decoration:underline; text-decoration-color:transparent; transition:all .15s;
+  }
+  .hist-link:hover { color:var(--accent2); text-decoration-color:var(--accent2); }
+
+  /* ── AGENT PANEL ─────────────────────────────────────────── */
+  .agent-panel {
+    position:fixed; bottom:0; left:220px; right:0; height:200px;
+    background:#070b10; border-top:1px solid rgba(0,217,163,.3);
+    display:flex; flex-direction:column;
+    transform:translateY(100%); transition:transform .25s ease;
+  }
+  .agent-hd {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 16px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .agent-dot  { width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); animation:pulse 1s infinite; }
+  .agent-name { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:.08em; text-transform:uppercase; }
+  .agent-cmd  { font-size:10px; color:var(--text3); }
+  .agent-cls  { margin-left:auto; font-size:10px; color:var(--text3); cursor:pointer; background:none; border:none; font-family:var(--mono); padding:2px 6px; }
+  .agent-out  { flex:1; overflow-y:auto; padding:10px 16px; font-size:11px; line-height:1.6; }
+  .ao { color:var(--text2); margin-bottom:1px; }
+  .ao.d { color:var(--text3); }
+  .ao.g { color:var(--accent); }
+
+  /* ── VERSION MODAL ───────────────────────────────────────── */
+  .modal-ov {
+    position:fixed; inset:0; background:rgba(0,0,0,.7);
+    display:flex; align-items:center; justify-content:center; z-index:100;
+  }
+  .modal-box {
+    background:var(--surface); border:1px solid var(--border2);
+    border-radius:8px; width:480px; max-height:70vh;
+    display:flex; flex-direction:column;
+    box-shadow:0 24px 64px rgba(0,0,0,.8);
+  }
+  .modal-hd  { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .modal-ttl { font-size:12px; font-weight:700; color:var(--text); }
+  .modal-bd  { flex:1; overflow-y:auto; padding:16px 20px; }
+
+  .vi { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+  .vi:last-child { border-bottom:none; }
+  .vi-dot { width:8px; height:8px; border-radius:50%; border:2px solid var(--accent); margin-top:3px; flex-shrink:0; }
+  .vi-dot.old { border-color:var(--text3); }
+  .vi-info { flex:1; }
+  .vi-date { font-size:11px; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .vi-note { font-size:10px; color:var(--text2); margin-bottom:6px; }
+  .vi-acts { display:flex; gap:6px; }
+  .vbtn { font-size:9px; font-weight:700; padding:2px 8px; border-radius:3px; cursor:pointer; font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; border:1px solid var(--border2); background:var(--surface2); color:var(--text2); }
+  .vbtn.r { border-color:rgba(0,217,163,.3); color:var(--accent); background:var(--active); }
+
+  /* misc */
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  .demo-note {
+    position:fixed; top:56px; right:12px;
+    background:rgba(245,166,35,.1); border:1px solid rgba(245,166,35,.3);
+    border-radius:4px; padding:5px 11px; font-size:10px; color:var(--accent3);
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo"><div class="logo-dot"></div>WorkCtx</div>
+  <div class="topbar-ticket">
+    <span class="ticket-id">ABC-123</span>
+    <span class="ticket-label">Sample Feature</span>
+    <span class="badge badge-active">Active</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-park"        onclick="toggleAgent()">⏸ Park</button>
+    <button class="btn btn-reconstruct" onclick="toggleAgent()">↺ Reconstruct</button>
+    <button class="btn btn-ghost">← All Tickets</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Tickets</span>
+      <button class="btn btn-primary" style="padding:3px 10px;font-size:9px">+ New</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn on"  onclick="setFilter(this)">All</button>
+      <button class="filter-btn"     onclick="setFilter(this)">Active</button>
+      <button class="filter-btn"     onclick="setFilter(this)">Paused</button>
+      <button class="filter-btn"     onclick="setFilter(this)">Done</button>
+    </div>
+    <div class="ticket-list">
+
+      <div class="ticket-card on" onclick="setTicket(this)">
+        <div class="tc-accent" style="background:var(--accent)"></div>
+        <div class="tc-head"><span class="tc-id">ABC-123</span><span class="badge badge-active" style="font-size:8px">Active</span></div>
+        <div class="tc-label">Sample Feature</div>
+        <div class="tc-meta">updated 2h ago</div>
+      </div>
+
+      <div class="ticket-card" onclick="setTicket(this)">
+        <div class="tc-accent" style="background:var(--accent3)"></div>
+        <div class="tc-head"><span class="tc-id">ABC-118</span><span class="badge badge-paused" style="font-size:8px">Paused</span></div>
+        <div class="tc-label">Sample Card Actions</div>
+        <div class="tc-meta">updated yesterday</div>
+      </div>
+
+      <div class="ticket-card" onclick="setTicket(this)">
+        <div class="tc-accent" style="background:var(--text3)"></div>
+        <div class="tc-head"><span class="tc-id">ABC-115</span><span class="badge badge-done" style="font-size:8px">Done</span></div>
+        <div class="tc-label">Text formatting helper</div>
+        <div class="tc-meta">updated 3d ago</div>
+      </div>
+
+      <div class="ticket-card" onclick="setTicket(this)">
+        <div class="tc-accent" style="background:var(--accent)"></div>
+        <div class="tc-head"><span class="tc-id">ABC-124</span><span class="badge badge-active" style="font-size:8px">Active</span></div>
+        <div class="tc-label">Sample OAuth Login</div>
+        <div class="tc-meta">updated 4h ago</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+
+    <!-- ── COMBINED FILES + LINKS PANEL ──────────────────── -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Files &amp; Links</span>
+        <div class="add-wrap">
+          <button class="add-btn" id="addBtn" onclick="toggleDD()">
+            + Add <span class="chevron">▾</span>
+          </button>
+          <div class="add-dd" id="addDD">
+            <div class="dd-row" onclick="closeDD()">
+              <span class="dd-ic">📁</span>
+              <span>Upload File<span class="dd-sub">pdf · sql · png · docx…</span></span>
+            </div>
+            <div class="dd-row" onclick="closeDD()">
+              <span class="dd-ic" style="font-size:11px;color:var(--text3)">↗</span>
+              <span>Add Link<span class="dd-sub">Figma · Confluence · URL…</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <!-- ── FILES first ── -->
+
+        <!-- system / pinned -->
+        <div class="asset-row sys">
+          <span class="a-icon">📄</span>
+          <span class="a-name">context.md</span>
+          <div class="a-right"><span class="ver-badge">v4</span></div>
+        </div>
+        <div class="asset-row sys">
+          <span class="a-icon">🤖</span>
+          <span class="a-name">AGENT.md</span>
+        </div>
+
+        <!-- user files -->
+        <div class="asset-row" onclick="setAsset(this)">
+          <span class="a-icon">🗒️</span>
+          <span class="a-name">notes.md</span>
+        </div>
+        <div class="asset-row on" onclick="showModal()">
+          <span class="a-icon">🖼️</span>
+          <span class="a-name">figma-export.png</span>
+          <div class="a-right"><span class="ver-badge">v3</span></div>
+        </div>
+        <div class="asset-row" onclick="showModal()">
+          <span class="a-icon">🗃️</span>
+          <span class="a-name">migration.sql</span>
+          <div class="a-right"><span class="ver-badge">v2</span></div>
+        </div>
+        <div class="asset-row" onclick="setAsset(this)">
+          <span class="a-icon">📋</span>
+          <span class="a-name">ac-notes.txt</span>
+        </div>
+        <div class="asset-row" onclick="setAsset(this)">
+          <span class="a-icon">📸</span>
+          <span class="a-name">qa-bug-screenshot.png</span>
+        </div>
+
+        <!-- ── LINKS after (no divider, icon change signals the group) ── -->
+
+        <div class="asset-row lnk" onclick="setAsset(this)">
+          <span class="a-icon arr">↗</span>
+          <span class="a-name">Figma — Sample feature flow</span>
+        </div>
+        <div class="asset-row lnk" onclick="setAsset(this)">
+          <span class="a-icon arr">↗</span>
+          <span class="a-name">Confluence — Sample feature spec</span>
+        </div>
+        <div class="asset-row lnk" onclick="setAsset(this)">
+          <span class="a-icon arr">↗</span>
+          <span class="a-name">Git — PR #42 action handler</span>
+        </div>
+        <div class="asset-row lnk" onclick="setAsset(this)">
+          <span class="a-icon arr">↗</span>
+          <span class="a-name">Jira — ABC-123</span>
+        </div>
+        <div class="asset-row lnk" onclick="setAsset(this)">
+          <span class="a-icon arr">↗</span>
+          <span class="a-name">Staging — admin/items</span>
+        </div>
+
+        <div class="dropzone">
+          ↓ drop files here
+          <span style="display:block;font-size:9px;opacity:.6;margin-top:2px">same filename → auto-versioned</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── CONTEXT PANEL ──────────────────────────────────── -->
+    <div class="panel">
+      <div class="tab-bar">
+        <button class="tab on"  onclick="setTab(this)">Context</button>
+        <button class="tab"     onclick="setTab(this)">Notes</button>
+        <button class="tab"     onclick="setTab(this)">Agent (AGENT.md)</button>
+      </div>
+      <div class="ctx-body">
+
+        <div class="ctx-ts">LAST PARKED — Mon 27 Jan 2025, 18:42 · via claude</div>
+
+        <div class="ctx-sec">
+          <div class="ctx-lbl">What This Ticket Is</div>
+          <div class="ctx-box">
+            Implement a "Sample Feature" approval flow. When a new item is submitted, the assigned reviewer receives a notification with Approve / Decline buttons. Clicking calls an action that updates the item status and sends a confirmation.
+          </div>
+        </div>
+
+        <div class="ctx-sec">
+          <div class="ctx-lbl">Where I Left Off</div>
+          <div class="ctx-box hi">
+            Halfway through the action handler in <code style="color:var(--accent2)">SampleActionHandler.cs</code>. The Approve path works — status updates correctly. The Decline path is returning a 200 but not updating the item record. Suspect the async pattern isn't awaiting the DB write before responding.
+          </div>
+        </div>
+
+        <div class="ctx-sec">
+          <div class="ctx-lbl">Next Step</div>
+          <div class="ctx-box hi">
+            Add <code style="color:var(--accent)">await</code> before <code style="color:var(--accent)">_itemRepository.UpdateStatusAsync()</code> in the Decline branch (~line 187). Then re-run the local test and check the DB write.
+          </div>
+        </div>
+
+        <div class="ctx-sec">
+          <div class="ctx-lbl">Blockers</div>
+          <div class="ctx-box war">
+            QA flagged a separate issue on ABC-118. That's paused — do not mix with this ticket.
+          </div>
+        </div>
+
+        <div class="ctx-sec">
+          <div class="ctx-lbl">Jira Status</div>
+          <div class="ctx-box" style="display:flex;align-items:center;gap:10px">
+            <span class="badge" style="background:rgba(74,158,255,.12);color:var(--accent2);border:1px solid rgba(74,158,255,.25)">In Progress</span>
+            <span style="color:var(--text2)">AC 3 of 5 complete · last comment 6h ago by QA</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="ctx-footer">
+        <span class="hist-link" onclick="showModal()">View context history (4 snapshots)</span>
+        <button class="btn btn-ghost" style="font-size:9px;padding:4px 10px">↺ Force refresh</button>
+      </div>
+    </div>
+
+  </div><!-- /workspace -->
+</div><!-- /main -->
+
+<div class="demo-note">Visual mockup · not functional</div>
+
+<!-- AGENT PANEL -->
+<div class="agent-panel" id="agentPanel">
+  <div class="agent-hd">
+    <div class="agent-dot"></div>
+    <span class="agent-name">Agent Running</span>
+    <span class="agent-cmd">claude --print "Park context for ABC-123…"</span>
+    <button class="agent-cls" onclick="toggleAgent()">✕ close</button>
+  </div>
+  <div class="agent-out">
+    <div class="ao d">→ Reading AGENT.md...</div>
+    <div class="ao d">→ Reading context.md (previous)...</div>
+    <div class="ao d">→ Reading migration.sql, notes.md...</div>
+    <div class="ao d">→ Fetching Jira ABC-123...</div>
+    <div class="ao">  Jira: In Progress · AC 3/5 · last comment 6h ago (QA: "Decline path not updating")</div>
+    <div class="ao g">→ Writing context.md...</div>
+    <div class="ao g">  ✓ Context parked — Mon 27 Jan 2025, 18:42</div>
+    <div class="ao d">→ Previous version saved to .versions/context.2025-01-27.md</div>
+  </div>
+</div>
+
+<!-- VERSION MODAL -->
+<div class="modal-ov" id="modal" style="display:none" onclick="if(event.target===this)hideModal()">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-ttl">Version history — figma-export.png</span>
+      <button class="btn btn-ghost" style="font-size:9px;padding:3px 8px" onclick="hideModal()">✕</button>
+    </div>
+    <div class="modal-bd">
+
+      <div class="vi">
+        <div class="vi-dot"></div>
+        <div class="vi-info">
+          <div class="vi-date">Mon 27 Jan 2025, 14:30 — current</div>
+          <div class="vi-note">Updated flow after design review — added decline confirmation step</div>
+          <div class="vi-acts"><button class="vbtn">Open</button><button class="vbtn">Download</button></div>
+        </div>
+      </div>
+
+      <div class="vi">
+        <div class="vi-dot old"></div>
+        <div class="vi-info">
+          <div class="vi-date">Fri 24 Jan 2025, 11:15</div>
+          <div class="vi-note">Initial Figma export from designer</div>
+          <div class="vi-acts"><button class="vbtn">Open</button><button class="vbtn">Download</button><button class="vbtn r">Restore</button></div>
+        </div>
+      </div>
+
+      <div class="vi">
+        <div class="vi-dot old"></div>
+        <div class="vi-info">
+          <div class="vi-date">Wed 22 Jan 2025, 09:00</div>
+          <div class="vi-note">(no change note)</div>
+          <div class="vi-acts"><button class="vbtn">Open</button><button class="vbtn">Download</button><button class="vbtn r">Restore</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // dropdown
+  function toggleDD() {
+    document.getElementById('addBtn').classList.toggle('on');
+    document.getElementById('addDD').classList.toggle('on');
+  }
+  function closeDD() {
+    document.getElementById('addBtn').classList.remove('on');
+    document.getElementById('addDD').classList.remove('on');
+  }
+  document.addEventListener('click', e => { if (!e.target.closest('.add-wrap')) closeDD(); });
+
+  // agent
+  let agentOpen = false;
+  function toggleAgent() {
+    agentOpen = !agentOpen;
+    document.getElementById('agentPanel').style.transform = agentOpen ? 'translateY(0)' : 'translateY(100%)';
+  }
+
+  // modal
+  function showModal()  { document.getElementById('modal').style.display = 'flex'; }
+  function hideModal()  { document.getElementById('modal').style.display = 'none'; }
+
+  // tabs
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  // filter
+  function setFilter(el) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  // ticket cards
+  function setTicket(el) {
+    document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  // asset rows
+  function setAsset(el) {
+    document.querySelectorAll('.asset-row:not(.sys)').forEach(r => r.classList.remove('on'));
+    el.classList.add('on');
+  }
+</script>
+</body>
+</html>

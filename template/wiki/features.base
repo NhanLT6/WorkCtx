@@ -1,0 +1,24 @@
+filters:
+  and:
+    - file.inFolder("features")
+    - type == "feature"
+views:
+  - type: table
+    name: Features
+    order:
+      - file.name
+      - area
+      - status
+      - availability
+      - first_release
+      - tickets
+  - type: table
+    name: Needs recheck
+    filters:
+      or:
+        - status == "needs-recheck"
+        - status == "research"
+    order:
+      - file.name
+      - area
+      - status
