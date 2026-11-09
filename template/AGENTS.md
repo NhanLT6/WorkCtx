@@ -9,6 +9,9 @@ Skills in `.agents/skills/` (Codex) and `.claude/skills/` (Claude Code) point to
 - `learn`: update feature pages after a change is implemented and verified.
 - `review`: wiki health audit.
 
+`doc` is a standalone skill linked at user level: the HTML doc for a complex ticket, saved in its ticket folder, or an
+explainer of a technique the user asks about. Simple tickets get no doc.
+
 When working on a feature or evaluating a feature request:
 
 1. Search `wiki/features/` for the feature and connected features. Read the frontmatter first, then the body. Treat

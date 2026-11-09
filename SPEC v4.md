@@ -24,6 +24,7 @@ WorkCtx/
   template/
     AGENTS.md           repo-local agent rules (Codex reads it; CLAUDE.md imports it)
     wiki/               skeleton copied to <repo>/wiki/
+  skills/               standalone skills (doc), linked at user level, used in any repo
   archive/              earlier specs and the v1 mockup
 ```
 
@@ -112,6 +113,11 @@ agents read. Each skill stays at or under 40 lines.
 | `plan` | New or changed feature needs an impact assessment and plan | `tickets/<ID>/plan.md`, assets in the same folder |
 | `learn` | Change implemented and verified | Feature pages and their frontmatter; plan status `done` |
 | `review` | Wiki health | Report only, unless asked to fix |
+
+Standalone skill, `skills/doc`: one HTML technical doc page (Web Awesome, Mermaid, Highlight.js) for a complex ticket
+or an explainer of a technique. It works in any repo, so `install.ps1` links it at user level (`~/.claude/skills`,
+`~/.agents/skills`) instead of into `wiki/skills`. In a WorkCtx repo a ticket doc goes in its ticket folder. Its
+`SKILL.md` stays short; the detail lives in `rules.md` and `template.html` beside it.
 
 ### Triggering
 

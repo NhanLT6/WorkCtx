@@ -1,7 +1,8 @@
 # WorkCtx
 
 A personal, local feature wiki and four agent skills (`start`, `plan`, `learn`, `review`) for working on tickets in a
-code repo with Codex and Claude Code. No app, no server: markdown, `AGENTS.md`, `SKILL.md` and one install script.
+code repo with Codex and Claude Code, plus a standalone `doc` skill for HTML technical docs in any repo. No app, no
+server: markdown, `AGENTS.md`, `SKILL.md` and one install script.
 
 ```powershell
 ./install.ps1 -RepoPath E:\repos\MyApp -Project MyApp -TicketPattern '\bABC-\d+\b' -TicketExample ABC-123 `

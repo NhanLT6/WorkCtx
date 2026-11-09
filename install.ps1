@@ -112,4 +112,16 @@ if ($TicketPattern) {
     }
 }
 
+# 6. Standalone skills (work in any repo, such as doc): linked once at user level for both agents.
+foreach ($dir in (Join-Path $HOME '.claude/skills'), (Join-Path $HOME '.agents/skills')) {
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    foreach ($skill in Get-ChildItem (Join-Path $PSScriptRoot 'skills') -Directory) {
+        $link = Join-Path $dir $skill.Name
+        $item = Get-Item $link -ErrorAction SilentlyContinue
+        if ($item -and -not $item.LinkType) { Write-Warning "$link is a real folder; move it away and rerun"; continue }
+        if ($item) { $item.Delete() }
+        New-Item -ItemType Junction -Path $link -Target $skill.FullName | Out-Null
+    }
+}
+
 Write-Host 'Done. Open wiki/ as an Obsidian vault for the graph view (optional).'

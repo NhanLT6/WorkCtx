@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" class="wa-theme-shoelace">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TICKET-ID Ticket title</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@awesome.me/webawesome@3.14.0/dist-cdn/styles/webawesome.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@awesome.me/webawesome@3.14.0/dist-cdn/styles/themes/shoelace.css">
+<link id="hl-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<link id="hl-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" disabled>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@awesome.me/webawesome@3.14.0/dist-cdn/webawesome.loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+<style>
+/* ===== Theme: Web Awesome token overrides only. Move this block to theme.css when the page becomes a template. ===== */
+:root {
+  --wa-font-family-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --wa-font-family-heading: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --wa-font-family-code: "JetBrains Mono", Consolas, monospace;
+  --wa-color-surface-lowered: #f5f7fa;
+  --wa-color-surface-default: #ffffff;
+  --wa-color-surface-raised: #ffffff;
+  --wa-color-surface-border: #d5dbe4;
+  --wa-color-text-normal: #16202c;
+  --wa-color-text-quiet: #5a6677;
+}
+.wa-dark {
+  --wa-color-surface-lowered: #181e27;
+  --wa-color-surface-default: #212934;
+  --wa-color-surface-raised: #273140;
+  --wa-color-surface-border: #37424f;
+  --wa-color-text-normal: #e7ecf2;
+  --wa-color-text-quiet: #a7b2c1;
+}
+/* ===== Page layout ===== */
+* { scrollbar-width: thin; scrollbar-color: var(--wa-color-neutral-border-normal) transparent; }
+body { margin: 0; background: var(--wa-color-surface-lowered); font-size: 16px; line-height: 1.55; }
+html, body { min-height: 100%; padding: 0; margin: 0; }
+html { scroll-behavior: smooth; }
+wa-page { --menu-width: 270px; background: var(--wa-color-surface-lowered); }
+wa-page[view="mobile"] { --menu-width: auto; }
+wa-page::part(header) { background: var(--wa-color-surface-lowered); border-bottom: 1px solid var(--wa-color-surface-border); }
+.here { flex: 1; min-width: 0; margin: 0 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: var(--wa-color-text-quiet); }
+#toc { display: grid; align-content: start; gap: 2px; padding: 4px 0; }
+#toc a { display: block; padding: 5px 12px; border-left: 3px solid transparent; border-radius: 0 var(--wa-border-radius-m) var(--wa-border-radius-m) 0; color: var(--wa-color-text-quiet); text-decoration: none; font-size: 15px; line-height: 1.35; }
+#toc a.sub { padding-left: 26px; font-size: 14px; }
+#toc a:hover { background: var(--wa-color-surface-default); color: var(--wa-color-text-normal); }
+#toc a[aria-current] { border-left-color: var(--wa-color-brand-border-loud); background: var(--wa-color-surface-default); color: var(--wa-color-text-normal); font-weight: 600; }
+h2, h3 { scroll-margin-top: 72px; }
+main { max-width: 1000px; margin: 0; padding: 24px 24px 64px; }
+.title { margin: 0; font: 700 clamp(26px, 4vw, 34px)/1.15 var(--wa-font-family-heading); letter-spacing: -0.01em; text-wrap: balance; }
+.title .id { color: var(--wa-color-brand-on-quiet); margin-right: 6px; }
+.title .epic { display: block; margin-top: 4px; font: 600 16px/1.3 var(--wa-font-family-body); letter-spacing: 0; color: var(--wa-color-text-quiet); }
+section > .wa-stack { --gap: 14px; }
+h2, h3 { margin: 0; }
+h2 { font: 700 23px/1.2 var(--wa-font-family-heading); letter-spacing: -0.01em; }
+h2 .num { color: var(--wa-color-brand-on-quiet); margin-right: 8px; }
+h3 { font: 600 17px/1.3 var(--wa-font-family-body); margin-top: 12px; }
+p { margin: 0; }
+.lead, .quiet { color: var(--wa-color-text-quiet); }
+.lead { max-width: 68ch; }
+.diagram { position: relative; overflow: hidden; background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); }
+.mermaid { cursor: grab; }
+.mermaid:active { cursor: grabbing; }
+.mermaid .nodeLabel b { font-weight: 600; }
+.pzbtns { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 4px; align-items: center; z-index: 1; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 0; }
+.notes > div { background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); padding: 10px 14px; font-size: 15px; min-width: 0; }
+.notes dt { font-weight: 600; }
+.notes dd { margin: 2px 0 0; color: var(--wa-color-text-quiet); }
+.notes dd code { color: var(--wa-color-text-normal); }
+.messages { display: grid; gap: 8px; }
+.messages .why { display: block; margin-top: 4px; font-size: 14px; color: var(--wa-color-text-quiet); }
+.link-sample { font: 12px var(--wa-font-family-code); background: var(--wa-color-surface-lowered); border-radius: var(--wa-border-radius-m); padding: 4px 8px; margin-top: 6px; overflow-x: auto; white-space: nowrap; }
+.link-sample mark { background: var(--wa-color-brand-fill-quiet); color: var(--wa-color-brand-on-quiet); border-radius: 3px; padding: 0 3px; }
+.notif { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+.notif .old { opacity: 0.75; }
+.notif .to { font-size: 22px; color: var(--wa-color-text-quiet); }
+@media (max-width: 640px) { .notif { grid-template-columns: 1fr; } .notif .to { transform: rotate(90deg); justify-self: center; } }
+table.plain { width: 100%; border-collapse: collapse; font-size: 15px; background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); overflow: hidden; }
+table.plain th, table.plain td { text-align: left; vertical-align: top; padding: 8px 12px; border-top: 1px solid var(--wa-color-surface-border); }
+table.plain th { background: var(--wa-color-surface-lowered); font-weight: 600; border-top: 0; }
+table.plain td:nth-child(2) { font-family: var(--wa-font-family-code); font-size: 13px; white-space: nowrap; }
+.decisions { list-style: none; margin: 0; padding: 0; background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); }
+.decisions li { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 9px 14px; border-top: 1px solid var(--wa-color-surface-border); font-size: 15px; }
+.decisions li:first-child { border-top: 0; }
+.decisions time { font: 13px/1.9 var(--wa-font-family-code); color: var(--wa-color-text-quiet); }
+.decisions .why { color: var(--wa-color-text-quiet); }
+.checks { display: grid; gap: 6px; background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); padding: 12px 14px; }
+wa-card p, wa-details p { margin: 4px 0 0; }
+wa-details [slot="summary"] { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.vars { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: end; padding: 12px 14px; background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); }
+.vars wa-input { width: 150px; }
+.vars wa-input[data-var="click"] { width: 300px; }
+.vars .queue { font-size: 14px; color: var(--wa-color-text-quiet); padding-bottom: 6px; }
+.steps { background: var(--wa-color-surface-default); border: 1px solid var(--wa-color-surface-border); border-radius: var(--wa-border-radius-l); }
+.step { display: grid; grid-template-columns: 52px 1fr; gap: 12px; padding: 14px; border-top: 1px solid var(--wa-color-surface-border); }
+.step:first-child { border-top: 0; }
+.step .key { align-self: start; margin-top: 1px; padding: 2px 0; text-align: center; font: 600 13px var(--wa-font-family-code); color: var(--wa-color-brand-on-quiet); background: var(--wa-color-brand-fill-quiet); border-radius: var(--wa-border-radius-m); }
+.step-body { display: grid; gap: 8px; min-width: 0; }
+.step wa-checkbox::part(label) { font-weight: 600; }
+.step.done .key { color: var(--wa-color-text-quiet); background: var(--wa-color-neutral-fill-quiet); }
+.step.done wa-checkbox::part(label) { color: var(--wa-color-text-quiet); text-decoration: line-through; }
+.kv { display: grid; grid-template-columns: 64px 1fr; gap: 6px 10px; margin: 0; font-size: 15px; }
+.kv dt { font: 600 12px/1.9 var(--wa-font-family-code); letter-spacing: 0.05em; text-transform: uppercase; color: var(--wa-color-text-quiet); }
+.kv dd { margin: 0; min-width: 0; }
+.code { position: relative; }
+.code pre { margin: 0; padding: 8px 90px 8px 10px; overflow-x: auto; background: var(--wa-color-surface-lowered); border-radius: var(--wa-border-radius-m); font-size: 13px; }
+.code pre code { background: none; padding: 0; }
+.code pre.link { white-space: pre-wrap; word-break: break-all; }
+.code .btns { position: absolute; top: 4px; right: 4px; display: flex; gap: 2px; }
+footer { font-size: 14px; color: var(--wa-color-text-quiet); }
+</style>
+</head>
+<body>
+<!--
+  HOW TO USE THIS TEMPLATE (delete this comment in the finished doc)
+  1. Save as doc.html in the ticket folder (explainer: <topic>.html; rules.md, File names). Set <title>, the h1, the
+     summary, and KEY_PREFIX in the script (a new prefix per doc, or ticks leak between docs). The Contents menu is
+     built from the h2 and h3 headings; give every section a heading and nothing else to maintain.
+  2. Replace every sample below with verified content. Keep what the page needs, delete the rest. Rules: rules.md.
+  3. Ticket doc keeps this section order: journey (today, behind the scenes, after), new logic, each affected area in
+     its own section, local test setup and runbook, terms, QA cases and decisions.
+     Explainer: what it is, how it works, variants (a table), where it appears in the code, limits, terms, sources. Use
+     the same parts; the h1 is the topic name (no ticket ID) and there is no runbook, QA or decisions.
+  4. Diagram sources sit in <script type="text/plain" class="mm">, never <pre> (it eats <br/>). No hex colors. Node classes: changed (new or changed step), block,
+     warn, ok, end1 (where a flow stops). A source can name a theme token in braces: {--wa-color-brand-border-loud}.
+  5. Do not add CSS colors. The look comes from the token block in <style>.
+-->
+<wa-page mobile-breakpoint="1100">
+  <header slot="header">
+    <wa-button data-toggle-nav size="s" appearance="outlined">&#9776; Contents</wa-button>
+    <span id="here" class="here"></span>
+    <wa-switch id="darkSwitch" size="s">Dark</wa-switch>
+  </header>
+  <nav slot="navigation" id="toc" aria-label="Contents"></nav>
+<main class="wa-stack" style="--gap: 48px">
+
+<div class="wa-stack" style="--gap: 12px">
+  <div class="bar">
+    <h1 class="title"><span class="id">TICKET-ID</span>Ticket title <span class="epic">Epic EPIC-ID Epic title</span></h1>
+  </div>
+  <p class="lead">One or two sentences: what the ticket changes and why.</p>
+</div>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">1</span>Journey</h2>
+
+    <h3>Today</h3>
+    <script type="text/plain" class="mm">
+flowchart LR
+  subgraph U["Where the user is"]
+    A1["<b>1 First step</b><br/>what the user does"] --> A2["<b>2 Second step</b><br/>what happens next"]
+  end
+  subgraph S["Where it happens"]
+    B3["<b>3 Third step</b><br/>what the system does"]
+  end
+  A2 --> B3
+  B3 -.-> E["<b>Flow ends</b><br/>nothing checks the result"]
+  class E end1
+    </script>
+    <dl class="notes">
+      <div><dt>Note title</dt><dd>One fact a reader needs about today's flow, checked against the code.</dd></div>
+      <div><dt>Another note</dt><dd>Keep notes short; they sit under the diagram as visible cards.</dd></div>
+    </dl>
+
+    <h3>How the system processes it</h3>
+    <p class="lead">The steps behind the scenes, with the services involved. Letters here, numbers in the journey charts.</p>
+    <script type="text/plain" class="mm">
+flowchart LR
+  subgraph W["Web"]
+    a["<b>a Request</b><br/>what arrives"] --> b["<b>b Handler</b><br/>what it does"]
+  end
+  subgraph Q["Queue + service"]
+    c["<b>c Queued</b><br/>waits for the service"] --> d["<b>d Service saves it</b><br/>what is stored"]
+  end
+  b --> c
+    </script>
+
+    <div class="wa-cluster"><h3>After TICKET-ID</h3><wa-badge variant="brand">New or changed step</wa-badge></div>
+    <script type="text/plain" class="mm">
+flowchart LR
+  subgraph U["Where the user is"]
+    N1["<b>1 First step</b><br/>unchanged"] --> N2["<b>2 Changed step</b><br/>what is different"]
+  end
+  subgraph S["Where it happens"]
+    N3["<b>3 New step</b><br/>what is added"]
+  end
+  N2 --> N3
+  class N2,N3 changed
+    </script>
+    <dl class="notes">
+      <div><dt>What changed</dt><dd>Say what is new and where it lives in the code. Mark the changed part of a URL:
+        <div class="link-sample">example.com/start/{id}<mark>?ref={ref}</mark></div></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">2</span>New logic</h2>
+    <p class="lead">For example the checks a new screen runs and the message for each result. Follow the line down.</p>
+    <div class="wa-cluster">
+      <wa-badge variant="danger">Blocked</wa-badge>
+      <wa-badge variant="warning">Warning</wa-badge>
+      <wa-badge variant="success">Pass</wa-badge>
+    </div>
+    <script type="text/plain" class="mm">
+flowchart TD
+  Q1{"First check?"}
+  Q1 -- "no" --> X1["Blocked: reason"]
+  Q1 -- "yes" --> Q2{"Second check?"}
+  Q2 -- "no" --> Y1["Warning: reason"]
+  Q2 -- "yes" --> OK["Pass"]
+  Y1 --> OK
+  class X1 block
+  class Y1 warn
+  class OK ok
+    </script>
+    <h3>Message for each result</h3>
+    <div class="messages">
+      <wa-callout variant="danger"><b>Blocked.</b> The exact text the user sees.<span class="why">When it happens.</span></wa-callout>
+      <wa-callout variant="warning"><b>Warning.</b> The exact text the user sees.</wa-callout>
+      <wa-callout variant="success"><b>Pass.</b> The exact text the user sees.</wa-callout>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">3</span>Affected area</h2>
+    <p class="lead">One section per affected area; do not bundle unrelated ones. A state change fits in one chart: the removed edge dashed grey, the new edge brand.</p>
+    <div class="wa-cluster"><wa-badge variant="brand">New trigger</wa-badge><wa-badge>Removed trigger, dashed</wa-badge></div>
+    <script type="text/plain" class="mm">
+flowchart LR
+  S["<b>State A</b>"] -- "Today: old trigger" --> P["<b>State B</b>"]
+  S == "After: new trigger" ==> P
+  P -- "Unchanged trigger" --> D["<b>State C</b>"]
+  linkStyle 0 stroke:{--wa-color-neutral-border-normal},stroke-dasharray:5 4
+  linkStyle 1 stroke:{--wa-color-brand-border-loud},stroke-width:2.5px
+    </script>
+    <dl class="notes">
+      <div><dt>Today</dt><dd>What triggers it now.</dd></div>
+      <div><dt>After</dt><dd>What triggers it after the change.</dd></div>
+    </dl>
+
+    <h3>Renamed text</h3>
+    <p class="lead">For text that changes in place, such as a renamed notification: old on the left, new on the right.</p>
+    <div class="notif">
+      <wa-card class="old"><b>Old title</b><p class="quiet">Old description, and when it is sent.</p></wa-card>
+      <span class="to" aria-hidden="true">&rarr;</span>
+      <wa-card><b>New title</b><p class="quiet">New description, and when it is sent.</p></wa-card>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">4</span>Local test setup</h2>
+    <table class="plain">
+      <thead><tr><th>Project</th><th>Steps</th><th>What it does in a local test</th></tr></thead>
+      <tbody>
+        <tr><td>web project</td><td>a-b</td><td>What to run and any local pitfall.</td></tr>
+        <tr><td>background service</td><td>c-d</td><td>Without it nothing is saved.</td></tr>
+      </tbody>
+    </table>
+    <wa-callout variant="brand"><b>Shortcut.</b> A way to test without the real third-party system.</wa-callout>
+
+    <wa-details>
+      <span slot="summary">Runbook: test locally, step by step <wa-badge id="runCount"></wa-badge></span>
+      <div class="wa-stack" style="--gap: 12px">
+        <p class="quiet">Fill in the test values once; every link and query below uses them. Letters match the processing chart.</p>
+        <div class="vars">
+          <wa-input size="s" label="Record ID" data-var="id" inputmode="numeric"></wa-input>
+          <wa-input size="s" label="Reference" data-var="ref"></wa-input>
+          <span class="queue">Worked out from the inputs <b data-show="slot"></b></span>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="key">0</span><div class="step-body">
+            <wa-checkbox id="r0">Set up locally</wa-checkbox>
+            <dl class="kv">
+              <dt>Do</dt><dd>What to start and which record to pick.</dd>
+              <dt>Expect</dt><dd>What the data should look like before the test.</dd>
+              <dt>SQL</dt><dd><pre class="tpl" data-tpl="DECLARE @id INT = {id};
+
+-- What this query shows
+SELECT Id, Status FROM Records WHERE Id = @id;"></pre></dd>
+            </dl>
+          </div></div>
+          <div class="step"><span class="key">a-b</span><div class="step-body">
+            <wa-checkbox id="r1">Trigger the flow</wa-checkbox>
+            <dl class="kv">
+              <dt>Do</dt><dd>What to click or call.</dd>
+              <dt>Open</dt><dd><pre class="tpl link" data-tpl="https://localhost:44300/start/{id}?ref={ref}"></pre></dd>
+              <dt>Expect</dt><dd>What the page or the data shows.</dd>
+            </dl>
+          </div></div>
+        </div>
+      </div>
+    </wa-details>
+  </div>
+</section>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">5</span>Terms in the code</h2>
+    <dl class="notes">
+      <div><dt>Term</dt><dd>What it means here, with the class, table or enum name. Enums as <code>Name (value)</code>.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <div class="wa-stack">
+    <h2><span class="num">6</span>QA cases and decisions</h2>
+
+    <div class="wa-cluster"><h3>QA cases</h3><wa-badge id="qaCount"></wa-badge></div>
+    <p class="quiet">Ticks are saved in this browser only. Cases follow the plan's Verification list.</p>
+    <div class="checks">
+      <wa-checkbox id="t1">The happy case works</wa-checkbox>
+      <wa-checkbox id="t2">The first blocked case is blocked</wa-checkbox>
+      <a href="#recipe-t2">How to reproduce the blocked case</a>
+    </div>
+    <wa-details id="recipe-t2">
+      <span slot="summary">Reproduce the blocked case</span>
+      <ol>
+        <li>One action per line, the button or link in <b>bold</b>.</li>
+        <li>The next action.</li>
+        <li>Expected result: what the tester sees.</li>
+      </ol>
+    </wa-details>
+
+    <h3>Open questions</h3>
+    <p class="quiet">While any are open, list them here, ready to ask the PO. When all are settled, delete this block and keep Decisions.</p>
+    <ul class="decisions">
+      <li><time></time><span><b>The question.</b> <span class="why">Why it matters and who can answer.</span></span></li>
+    </ul>
+
+    <h3>Decisions</h3>
+    <ul class="decisions">
+      <li><time>2026-01-01</time><span><b>What was chosen.</b> <span class="why">Why. Same content as the plan.</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<footer>Source: ticket snapshot date, code checked at branch and revision, plan file.</footer>
+</main>
+</wa-page>
+
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.3.0/dist/mermaid.esm.min.mjs";
+
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const KEY_PREFIX = "doc-TICKET-ID-"; // a new prefix per doc, or ticks and views leak between docs
+const get = (k, d) => { try { return JSON.parse(localStorage.getItem(KEY_PREFIX + k)) ?? d; } catch { return d; } };
+const put = (k, v) => { try { localStorage.setItem(KEY_PREFIX + k, JSON.stringify(v)); } catch {} };
+
+/* ---------- Diagrams: Mermaid source -> SVG you can drag and zoom ---------- */
+const READ = 0.85; // smallest scale at which the 14px diagram text is still comfortable to read
+const validView = v => v && v.r > 0 && [v.r, v.cx, v.cy].every(Number.isFinite); // an older doc saved another shape
+const pzState = get("pz", {}); // the reader's view per diagram: scale and the drawing point at the frame center
+let saveTimer;
+const remember = d => {
+  const pz = d._pz; // null while the instance is being dropped: destroy() resets the view and fires these callbacks
+  if (!pz) return;
+  const svg = d.querySelector("svg"), R = pz.getSizes().realZoom, p = pz.getPan();
+  pzState[d.dataset.i] = { r: R, cx: (svg.clientWidth / 2 - p.x) / R, cy: (svg.clientHeight / 2 - p.y) / R };
+  clearTimeout(saveTimer); saveTimer = setTimeout(() => put("pz", pzState), 300);
+};
+
+const diagrams = $$("script.mm").map((s, i) => {
+  const box = document.createElement("div"), d = document.createElement("div"), btns = document.createElement("div");
+  box.className = "diagram"; d.className = "mermaid"; btns.className = "pzbtns";
+  d.dataset.src = s.textContent; d.dataset.i = i;
+  [["+", "Zoom in", () => d._pz?.zoomIn()], ["−", "Zoom out", () => d._pz?.zoomOut()], ["Reset", "Back to the readable default", () => reset(d)]].forEach(([label, title, fn]) => {
+    const b = document.createElement("wa-button");
+    b.size = "s"; b.title = title; b.textContent = label; b.addEventListener("click", fn);
+    btns.append(b);
+  });
+  box.append(d, btns); s.after(box);
+  // Ctrl + wheel (or trackpad pinch) zooms; a plain wheel still scrolls the page
+  d.addEventListener("wheel", e => {
+    if (!d._pz || !(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    e.deltaY < 0 ? d._pz.zoomIn() : d._pz.zoomOut();
+  }, { passive: false });
+  return d;
+});
+
+// Default view: fit the frame when that keeps the text at 70% or more, otherwise stay at READ scale.
+// Never larger than natural size. A side wider than the frame starts at its edge, a narrower one is centered.
+function readable(d) {
+  const pz = d._pz, svg = d.querySelector("svg"), W = svg.clientWidth, H = svg.clientHeight;
+  const fit = pz.getSizes().realZoom;
+  if (!(fit > 0 && Number.isFinite(fit))) return;
+  pz.zoom((fit >= 0.7 ? Math.min(fit, 1) : READ) / fit);
+  const R = pz.getSizes().realZoom;                          // screen pixels per drawing unit now
+  const box = svg.querySelector(".svg-pan-zoom_viewport").getBBox();
+  // svg-pan-zoom drops the viewBox and pans in screen pixels from the frame's top-left
+  const place = (frame, size, boxStart) => (size * R > frame ? 8 : (frame - size * R) / 2) - R * boxStart;
+  pz.pan({ x: place(W, box.width, box.x), y: place(H, box.height, box.y) });
+}
+function reset(d) {
+  if (!d._pz) return;
+  d._pz.reset(); readable(d);
+  delete pzState[d.dataset.i]; put("pz", pzState);
+}
+function enablePanZoom(d) {
+  const svg = d.querySelector("svg");
+  if (!svg || !d.clientWidth || typeof svgPanZoom === "undefined") return; // hidden inside a closed accordion: done on open
+  const vb = svg.viewBox.baseVal;
+  svg.style.cssText = `display:block;max-width:none;width:${d.clientWidth}px;height:${Math.round(Math.min(560, Math.max(160, vb.height * READ + 40)))}px`;
+  const pz = d._pz = svgPanZoom(svg, { controlIconsEnabled: false, mouseWheelZoomEnabled: false, dblClickZoomEnabled: false, minZoom: 0.2, maxZoom: 10, fit: true, center: true });
+  const saved = pzState[d.dataset.i];
+  if (validView(saved)) { // same scale, same drawing point at the center, whatever the frame size is now
+    pz.zoom(saved.r / pz.getSizes().realZoom);
+    const R = pz.getSizes().realZoom;
+    pz.pan({ x: svg.clientWidth / 2 - saved.cx * R, y: svg.clientHeight / 2 - saved.cy * R });
+  } else readable(d);
+  pz.setOnZoom(() => remember(d)); pz.setOnPan(() => remember(d)); // only the reader's own moves are remembered
+}
+const dropPanZoom = d => { const pz = d._pz; d._pz = null; pz?.destroy(); };
+document.addEventListener("wa-after-show", e => $$(".mermaid", e.target).forEach(d => d._pz || enablePanZoom(d)));
+let resizeTimer, drawnWidth = 0;
+addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  // Frames are sized from the page width, so redraw from the source, but only when that width changed
+  resizeTimer = setTimeout(() => { if ($("main").clientWidth !== drawnWidth) drawDiagrams(); }, 300);
+});
+
+// Resolve a Web Awesome color token to #rrggbb: Mermaid's base theme cannot parse oklch()
+function tok(name) {
+  const e = document.createElement("i"), x = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+  e.style.color = `var(${name})`; document.body.append(e);
+  x.fillStyle = getComputedStyle(e).color; e.remove();
+  x.fillRect(0, 0, 1, 1);
+  return "#" + [...x.getImageData(0, 0, 1, 1).data].slice(0, 3).map(n => n.toString(16).padStart(2, "0")).join("");
+}
+// Every color comes from the page theme. Plain nodes stay neutral so the colored classes stand out.
+function mermaidTheme() {
+  const text = tok("--wa-color-text-normal");
+  return { theme: "base", themeVariables: {
+    fontSize: "14px", fontFamily: getComputedStyle(document.body).fontFamily,
+    background: tok("--wa-color-surface-default"), textColor: text,
+    primaryColor: tok("--wa-color-surface-default"), primaryTextColor: text, primaryBorderColor: tok("--wa-color-neutral-border-normal"),
+    secondaryColor: tok("--wa-color-neutral-fill-quiet"), tertiaryColor: tok("--wa-color-surface-lowered"),
+    clusterBkg: tok("--wa-color-neutral-fill-quiet"), clusterBorder: tok("--wa-color-neutral-border-quiet"), titleColor: tok("--wa-color-text-quiet"),
+    lineColor: tok("--wa-color-neutral-border-loud"), edgeLabelBackground: tok("--wa-color-surface-default")
+  } };
+}
+// Node classes used in the sources: block, warn, ok, changed (new or changed step), end1 (where a flow stops, neutral)
+function classDefs() {
+  const text = tok("--wa-color-text-normal");
+  const def = (name, v, extra = "") => `classDef ${name} fill:${tok(`--wa-color-${v}-fill-quiet`)},stroke:${tok(`--wa-color-${v}-border-normal`)},color:${text}${extra}`;
+  return [def("block", "danger"), def("warn", "warning"), def("ok", "success"),
+    `classDef changed fill:${tok("--wa-color-brand-fill-quiet")},stroke:${tok("--wa-color-brand-border-loud")},stroke-width:2px,color:${text}`,
+    `classDef end1 fill:${tok("--wa-color-surface-lowered")},stroke:${tok("--wa-color-neutral-border-normal")},stroke-dasharray:5 4,color:${tok("--wa-color-text-quiet")}`].join("\n");
+}
+// Sources may name theme tokens in braces, e.g. linkStyle 0 stroke:{--wa-color-brand-border-loud}
+const withTokens = src => src.replace(/\{(--wa-[\w-]+)\}/g, (a, n) => tok(n));
+// Draws run one after another, each diagram with its own id (Mermaid's own ids restart on every run and clash)
+let drawing = Promise.resolve(), seq = 0;
+function drawDiagrams() {
+  return drawing = drawing.then(async () => {
+    drawnWidth = $("main").clientWidth;
+    await document.fonts.ready; // labels are measured at render time, so the web fonts must be in
+    mermaid.initialize({ startOnLoad: false, flowchart: { htmlLabels: true, useMaxWidth: false, nodeSpacing: 24, rankSpacing: 36 }, ...mermaidTheme() });
+    const defs = classDefs();
+    for (const d of diagrams) {
+      dropPanZoom(d);
+      try { d.innerHTML = (await mermaid.render("mm" + seq++, withTokens(d.dataset.src) + "\n" + defs)).svg; enablePanZoom(d); }
+      catch (e) { d.textContent = String(e.message || e); }
+    }
+  });
+}
+
+/* ---------- Light / dark: follows the device until the reader picks one ---------- */
+const dm = matchMedia("(prefers-color-scheme: dark)"), darkSwitch = $("#darkSwitch");
+let dark = get("dark", null) ?? dm.matches;
+function applyMode() {
+  root.classList.toggle("wa-dark", dark);
+  $("#hl-light").disabled = dark; $("#hl-dark").disabled = !dark;
+  darkSwitch.checked = dark;
+  drawDiagrams();
+}
+darkSwitch.addEventListener("change", () => { dark = darkSwitch.checked; put("dark", dark); applyMode(); });
+dm.addEventListener("change", () => { if (get("dark", null) === null) { dark = dm.matches; applyMode(); } });
+
+/* ---------- Code blocks: wrap with Copy (and Open for links) ---------- */
+function fallbackCopy(text) { // wa-copy-button can fail when the file is opened from disk
+  const ta = Object.assign(document.createElement("textarea"), { value: text });
+  ta.style.cssText = "position:fixed;opacity:0";
+  document.body.append(ta); ta.select();
+  try { document.execCommand("copy"); } catch {}
+  ta.remove();
+}
+$$("pre.tpl").forEach(pre => {
+  const wrap = document.createElement("div"), btns = document.createElement("div"), code = document.createElement("code");
+  wrap.className = "code"; btns.className = "btns";
+  pre.before(wrap); pre.append(code); wrap.append(pre, btns);
+  pre._code = code; pre._copy = document.createElement("wa-copy-button");
+  btns.append(pre._copy);
+  pre._copy.addEventListener("wa-error", () => fallbackCopy(pre._copy.value));
+  if (pre.classList.contains("link")) {
+    pre._open = Object.assign(document.createElement("wa-button"), { textContent: "Open", size: "s", appearance: "plain" });
+    pre._open.setAttribute("target", "_blank");
+    btns.prepend(pre._open);
+  }
+});
+
+// Test values typed once, reused by every link and SQL block
+const vals = { id: "", ref: "", ...get("vars", {}) }; // one entry per data-var input
+const derived = () => ({
+  ...Object.fromEntries(Object.keys(vals).map(k => [k, vals[k] || "{" + k + "}"])),
+  slot: /^\d+$/.test(vals.id) ? "slot " + (vals.id % 16 + 1) : "?" // a value worked out from the inputs, shown by data-show
+});
+function renderCode() {
+  const d = derived();
+  $$("pre.tpl").forEach(pre => {
+    const text = pre.dataset.tpl.replace(/\{(\w+)\}/g, (a, k) => k in d ? d[k] : a);
+    pre._code.textContent = text; pre._code.removeAttribute("data-highlighted");
+    if (!pre.classList.contains("link")) hljs.highlightElement(pre._code);
+    pre._copy.value = text;
+    if (pre._open) pre._open.setAttribute("href", text);
+  });
+  $$("[data-show]").forEach(el => el.textContent = d[el.dataset.show]);
+}
+$$("wa-input[data-var]").forEach(inp => {
+  const k = inp.dataset.var;
+  inp.value = vals[k] || "";
+  inp.addEventListener("input", () => {
+    vals[k] = inp.value; put("vars", vals);
+    $$(`wa-input[data-var="${k}"]`).forEach(o => o !== inp && (o.value = inp.value));
+    renderCode();
+  });
+});
+
+/* ---------- Checkboxes: saved ticks and counters ---------- */
+const ticks = get("checks", {});
+const count = (ids, el) => el.textContent = `${ids.filter(i => $("#" + i).checked).length} / ${ids.length}`;
+const runIds = $$('wa-checkbox[id^="r"]').map(c => c.id), qaIds = $$('wa-checkbox[id^="t"]').map(c => c.id);
+function counts() { count(runIds, $("#runCount")); count(qaIds, $("#qaCount")); }
+const markStep = b => b.closest(".step")?.classList.toggle("done", b.checked); // runbook row fades when ticked
+$$("wa-checkbox").forEach(b => {
+  b.checked = !!ticks[b.id]; markStep(b);
+  b.addEventListener("change", () => { ticks[b.id] = b.checked; put("checks", ticks); markStep(b); counts(); });
+});
+
+/* ---------- Contents: built from the headings, follows the scroll ---------- */
+// Text of a heading with a space between its parts: "1" + "Journey", "TICKET-ID" + "Title"
+const headText = h => [...h.childNodes].filter(n => !n.classList?.contains("epic")).map(n => n.textContent.trim()).join(" ").trim();
+const heads = $$("main h2, main h3"), toc = $("#toc"), here = $("#here");
+const links = heads.map((h, i) => {
+  h.id ||= "s" + (i + 1) + "-" + headText(h).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const a = Object.assign(document.createElement("a"), { href: "#" + h.id, textContent: headText(h) });
+  if (h.tagName === "H3") a.className = "sub";
+  a.addEventListener("click", () => $("wa-page").hideNavigation?.());
+  toc.append(a);
+  return a;
+});
+here.textContent = headText($("main h1")); // the header always shows the doc title; the Contents menu shows where you are
+function whereAmI() {
+  let at = -1;
+  heads.forEach((h, i) => { if (h.getBoundingClientRect().top <= 110) at = i; });
+  links.forEach((a, i) => i === at ? a.setAttribute("aria-current", "location") : a.removeAttribute("aria-current"));
+}
+addEventListener("scroll", () => requestAnimationFrame(whereAmI), { passive: true });
+
+renderCode(); counts(); applyMode(); whereAmI();
+</script>
+</body>
+</html>
