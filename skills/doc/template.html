@@ -34,6 +34,12 @@
   --wa-color-text-normal: #e7ecf2;
   --wa-color-text-quiet: #a7b2c1;
 }
+/* Shoelace's dark quiet fills are near full strength; mix them into the surface so callouts and result nodes stay a soft tint, as in light */
+.wa-theme-shoelace.wa-dark {
+  --wa-color-danger-fill-quiet: color-mix(in oklab, var(--wa-color-danger-20) 40%, var(--wa-color-surface-default));
+  --wa-color-warning-fill-quiet: color-mix(in oklab, var(--wa-color-warning-20) 40%, var(--wa-color-surface-default));
+  --wa-color-success-fill-quiet: color-mix(in oklab, var(--wa-color-success-20) 40%, var(--wa-color-surface-default));
+}
 /* ===== Page layout ===== */
 * { scrollbar-width: thin; scrollbar-color: var(--wa-color-neutral-border-normal) transparent; }
 body { margin: 0; background: var(--wa-color-surface-lowered); font-size: 16px; line-height: 1.55; }
@@ -133,7 +139,7 @@ footer { font-size: 14px; color: var(--wa-color-text-quiet); }
   <header slot="header">
     <wa-button data-toggle-nav size="s" appearance="outlined">&#9776; Contents</wa-button>
     <span id="here" class="here"></span>
-    <wa-switch id="darkSwitch" size="s">Dark</wa-switch>
+    <wa-button id="darkSwitch" size="s" appearance="plain"><wa-icon name="moon" label="Dark mode"></wa-icon></wa-button>
   </header>
   <nav slot="navigation" id="toc" aria-label="Contents"></nav>
 <main class="wa-stack" style="--gap: 48px">
@@ -484,10 +490,11 @@ let dark = get("dark", null) ?? dm.matches;
 function applyMode() {
   root.classList.toggle("wa-dark", dark);
   $("#hl-light").disabled = dark; $("#hl-dark").disabled = !dark;
-  darkSwitch.checked = dark;
+  darkSwitch.querySelector("wa-icon").name = dark ? "sun" : "moon";
+  darkSwitch.title = dark ? "Switch to light" : "Switch to dark";
   drawDiagrams();
 }
-darkSwitch.addEventListener("change", () => { dark = darkSwitch.checked; put("dark", dark); applyMode(); });
+darkSwitch.addEventListener("click", () => { dark = !dark; put("dark", dark); applyMode(); });
 dm.addEventListener("change", () => { if (get("dark", null) === null) { dark = dm.matches; applyMode(); } });
 
 /* ---------- Code blocks: wrap with Copy (and Open for links) ---------- */

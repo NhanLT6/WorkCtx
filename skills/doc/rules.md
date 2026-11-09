@@ -31,12 +31,12 @@ Structure and headings carry understanding. Color only marks what needs attentio
 ## Navigation and theme switch
 
 - The page is a `wa-page`. Its sticky header holds the Contents button (left, only below 1100px), the doc title
-  (always the same, it does not follow the scroll), and the Dark switch (right). No stepper, progress bar or table of
+  (always the same, it does not follow the scroll), and the theme button (right): a moon or sun icon, no text. No stepper, progress bar or table of
   contents inside the content.
 - Contents is the `navigation` slot, built in script from the h2 and h3 headings, so it never needs editing. At 1100px
   and wider it is a left panel; below that it collapses into a drawer opened by the Contents button, like a phone menu.
   The section being read is highlighted in the menu; choosing an entry closes the drawer.
-- Light or dark follows the device until the reader picks one; the pick is kept. The switch is the only theme control.
+- Light or dark follows the device until the reader picks one; the pick is kept. That button is the only theme control.
 
 ## File names
 
@@ -140,5 +140,6 @@ summary that says what is inside. After a restructure, remove references that no
 
 - Written for developers. No QA or reader-mode toggle; other readers skip the code.
 - Ticket QA cases follow the plan's Verification list.
-- A QA case that needs a recipe gets a short numbered list, linked from the case: one action per line, the last line the
-  expected result. No SQL or long explanation unless asked.
+- Write each step, note or recipe as short as it would be in a preview: one line per step, only what is needed to do or
+  understand it. Do not grow a one-line point into a paragraph.
+- A QA case that needs a recipe gets a numbered list linked from the case, the last line the expected result.
