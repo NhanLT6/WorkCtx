@@ -9,7 +9,7 @@ Structure and headings carry understanding. Color only marks what needs attentio
   colors, for light and dark.
 - Theme: Shoelace (`wa-theme-shoelace`) under the token block. Matter is a Pro theme, not on the public CDN. The dark
   surfaces sit a step lighter than Shoelace's near black, for easier text contrast.
-- Fonts: Bricolage Grotesque for headings, Figtree for body, JetBrains Mono for code. Body text 16px.
+- Fonts: Space Grotesk for headings, IBM Plex Sans for body, JetBrains Mono for code. Body text 16px.
 - Content is left-aligned next to the Contents panel, not centered.
 - Mermaid reads every color from the tokens through the template's `tok()`. A source can name a token in braces:
   `linkStyle 0 stroke:{--wa-color-brand-border-loud}`.
@@ -52,8 +52,10 @@ Structure and headings carry understanding. Color only marks what needs attentio
 - h3: only to split a section, label only ("Today", "After ABC-123"). No badge repeating the label.
 - No horizontal dividers. Spacing and headings separate sections.
 - Every title makes sense alone. "Dashboard" or "Q7 Design" does not; "Local test setup" does.
-- No decoration without meaning (numbered circles, icons, gradients). It reads as generated.
+- No decoration without meaning (numbered circles, gradients, icons outside diagrams). It reads as generated.
 - No manual line break or hyphen inside a heading.
+- Every reference to another spot on the page (Rule 2, Q1, finding 3) is a link to an `id` on that spot, so a click
+  scrolls there. The template outlines the target. Label the link with what it points to ("Rule 2", not "2").
 
 ## Color and badges
 
@@ -64,6 +66,31 @@ Structure and headings carry understanding. Color only marks what needs attentio
 - Use `wa-badge` as it comes. Restyling its parts draws a badge inside a badge.
 
 ## Diagrams
+
+### Icons in diagram nodes
+
+Icons say who or what does a step, so a reader can scan a chart by actor. Font Awesome Free, written in the label as
+`fa:fa-user <b>First line</b>`.
+
+| Step done by                 | Icon          |
+|------------------------------|---------------|
+| A person: admin, Finance, user | `fa-user`     |
+| A background or scheduled job | `fa-clock`    |
+| An email or notification sent | `fa-envelope` |
+| An external system: Xero, HubSpot, a bank | `fa-plug` |
+| Data saved or changed in the database | `fa-database` |
+| Work put on a queue, waiting for a service | `fa-inbox` |
+| A file produced or downloaded: bank file, CSV export | `fa-file-arrow-down` |
+
+- Use icons only when a chart mixes at least two of these actors. A chart with one actor gets none.
+- One icon per node, before the bold first line. The same icon always means the same actor across the page.
+- No icon on a decision, a plain state, a date or a flow end. Status stays with color, never with an icon.
+- Show the legend once, as a quiet line above the first chart that uses icons, listing only the icons the page uses.
+- The last three rows suit behind-the-scenes charts, for example to show that data is saved before an email is sent.
+- A step whose actor is unknown gets no icon rather than a guess.
+
+### Drawing rules
+
 
 - Sources sit in `<script type="text/plain" class="mm">`, never in `<pre>`: the HTML parser turns `<br/>` into real
   tags and the labels run together.
@@ -100,6 +127,19 @@ Ticket doc, which explains how today's code works and how the change alters it:
 4. Local test setup and runbook.
 5. Terms in the code.
 6. QA cases and decisions.
+
+Ticket doc for reviewing another developer's build:
+
+1. Flow today, as in a ticket doc.
+2. What the ticket asks: the final AC with the decisions from Jira comments folded in, one row per rule with Today and
+   Ticket asks columns. A reader must not need to open Jira.
+3. The build compared with the AC: one row per rule with Matches, Differs or Ask PO, then the findings. Describe the
+   build in detail only where it differs from the AC.
+4. Open questions and decisions.
+5. Local test setup, runbook and QA cases.
+
+Leave out commit lists, commit hashes and code line numbers; cite a path and a method name. The revision checked goes in
+the footer.
 
 Explainer:
 
